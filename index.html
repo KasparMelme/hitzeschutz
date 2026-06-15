@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heiße Schicht – Vorbereitungspodcast</title>
+<style>
+  :root {
+    --bg-deep: #1c1410;
+    --bg-card: #2a1f18;
+    --accent: #ff7a3d;
+    --accent-soft: #ffb38a;
+    --text-main: #f5ece4;
+    --text-muted: #c7b8ad;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle at 30% 20%, #3a2418 0%, var(--bg-deep) 55%);
+    color: var(--text-main);
+    padding: 24px;
+  }
+
+  .card {
+    max-width: 480px;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 122, 61, 0.15);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  audio {
+    width: 100%;
+    border-radius: 12px;
+    /* leichte Anpassung der Player-Optik in Chrome/Edge */
+    accent-color: var(--accent);
+  }
+
+  audio::-webkit-media-controls-panel {
+    background-color: #38291f;
+  }
+
+  .hint {
+    margin-top: 24px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 18px;
+  }
+
+  .heat-bar {
+    height: 4px;
+    width: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #ffd166, var(--accent), #c1440e);
+    margin-bottom: 24px;
+  }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="heat-bar" aria-hidden="true"></div>
+    <p class="eyebrow">Vorbereitung &middot; Seminar Hitzeschutz am Arbeitsplatz</p>
+    <h1>Heiße Schicht</h1>
+    <p class="subtitle">Wenn das Klinikum ins Schwitzen kommt – ein Gespräch zwischen Mira und Jens.</p>
+
+    <div class="meta">
+      <span>⏱️ ca. 12–13 Min.</span>
+      <span>🎧 Zum Anhören vor dem Seminar</span>
+    </div>
+
+    <audio controls controlsList="nodownload noremoteplayback" oncontextmenu="return false;">
+      <source src="heisse-schicht.mp3" type="audio/mpeg">
+      Dein Browser unterstützt das Audio-Element leider nicht.
+    </audio>
+
+    <p class="hint">
+      Hört euch die Episode einmal an (geht z. B. beim Pendeln oder Spazieren) und notiert euch dabei
+      drei Risikofaktoren für Hitzebelastung am Arbeitsplatz Klinikum sowie zwei besonders gefährdete
+      Personengruppen – gern mit Beispielen aus eurem eigenen Famulatur- oder PJ-Alltag.
+      Wir starten im Seminar direkt damit.
+    </p>
+  </main>
+</body>
+</html>
