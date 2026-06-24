@@ -53,16 +53,20 @@
     backdrop-filter:blur(2px); transition:background .15s; z-index:3;
   }
   .fs-btn:hover { background:rgba(0,0,0,0.8); }
-  /* eigene Lautstaerke-Leiste (unten), nur im Vollbild sichtbar */
+  /* Lautstaerke-Leiste: im normalen Fenster sichtbar unter dem Video */
   .vol-bar {
-    display:none; position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
-    align-items:center; gap:10px; background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
-    padding:10px 16px; border-radius:12px; z-index:4;
+    display:flex; align-items:center; gap:10px; justify-content:center;
+    margin-top:12px; font-size:0.85rem; color:var(--text-muted);
   }
-  .video-shell:fullscreen .vol-bar { display:flex; }
-  .video-shell:-webkit-full-screen .vol-bar { display:flex; }
-  .vol-bar .ic { font-size:1.1rem; line-height:1; color:#fff; }
-  .vol-bar input[type=range] { width:140px; accent-color:var(--accent); cursor:pointer; }
+  .vol-bar .ic { font-size:1.05rem; line-height:1; }
+  .vol-bar input[type=range] { width:150px; accent-color:var(--accent); cursor:pointer; }
+  /* im Vollbild: schwebend ueber dem Video zentriert */
+  .video-shell:fullscreen .vol-bar,
+  .video-shell:-webkit-full-screen .vol-bar {
+    position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+    margin-top:0; background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
+    padding:10px 16px; border-radius:12px; z-index:4; color:#fff;
+  }
   .join-btn { display:inline-block; border:none; background:var(--accent); color:#1c1410; font-size:1.05rem; font-weight:700; padding:16px 28px; border-radius:12px; cursor:pointer; font-family:inherit; margin:8px 0 4px; transition:transform .1s,filter .15s; }
   .join-btn:hover { filter:brightness(1.08); }
   .join-btn:active { transform:scale(0.98); }
