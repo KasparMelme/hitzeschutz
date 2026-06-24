@@ -22,6 +22,9 @@
   .preview-wrap { position:relative; margin-bottom:18px; border-radius:12px; overflow:hidden; background:#000; }
   .preview-wrap video { width:100%; display:block; }
   .preview-tag { position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.55); color:#fff; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:6px; letter-spacing:0.05em; }
+  .prev-vol { display:flex; align-items:center; gap:9px; margin:-6px 0 16px; font-size:0.78rem; color:var(--text-muted); }
+  .prev-vol input[type=range] { flex:1; accent-color:var(--accent); cursor:pointer; }
+  .prev-vol-label { white-space:nowrap; }
   .btn-row { display:flex; gap:10px; margin-bottom:10px; }
   .play { flex:2; background:#3ecf6a; color:#06210f; font-size:1.1rem; padding:16px; }
   .pause { flex:1; background:#e0a23c; color:#241803; font-size:0.95rem; padding:16px; }
@@ -59,12 +62,17 @@
     <div class="controls" id="controls">
       <div class="live-badge"><span class="live-dot" id="liveDot"></span> <span id="liveLabel">Verbinde …</span></div>
 
-      <!-- Vorschau dessen, was die Zuschauer sehen -->
+      <!-- Vorschau dessen, was die Zuschauer sehen (mit Ton) -->
       <div class="preview-wrap">
         <span class="preview-tag">VORSCHAU</span>
-        <video id="preview" muted playsinline preload="auto">
+        <video id="preview" playsinline preload="auto">
           <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
         </video>
+      </div>
+      <div class="prev-vol">
+        <span id="pVolIcon">🔊</span>
+        <input type="range" id="pVol" min="0" max="1" step="0.05" value="1" aria-label="Vorschau-Lautstärke">
+        <span class="prev-vol-label">Vorschau-Ton</span>
       </div>
 
       <div class="btn-row">
@@ -122,6 +130,13 @@
     const liveDot = document.getElementById("liveDot");
     const liveLabel = document.getElementById("liveLabel");
     const preview = document.getElementById("preview");
+    const pVol = document.getElementById("pVol");
+    const pVolIcon = document.getElementById("pVolIcon");
+    pVol.addEventListener("input", function () {
+      preview.volume = parseFloat(pVol.value);
+      preview.muted = (preview.volume === 0);
+      pVolIcon.textContent = preview.volume === 0 ? "🔇" : (preview.volume < 0.5 ? "🔉" : "🔊");
+    });
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
     const stopBtn = document.getElementById("stopBtn");

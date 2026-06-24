@@ -41,13 +41,28 @@
   @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(255,77,77,0.6)} 70%{box-shadow:0 0 0 8px rgba(255,77,77,0)} 100%{box-shadow:0 0 0 0 rgba(255,77,77,0)} }
   .video-shell { position:relative; }
   video { width:100%; border-radius:12px; background:#000; display:block; }
+  /* Im Vollbild: Shell fuellt Bildschirm, Video zentriert, kein nativer Slider */
+  .video-shell:fullscreen { width:100vw; height:100vh; background:#000; border-radius:0; display:flex; align-items:center; justify-content:center; }
+  .video-shell:-webkit-full-screen { width:100vw; height:100vh; background:#000; border-radius:0; display:flex; align-items:center; justify-content:center; }
+  .video-shell:fullscreen video { width:auto; height:100vh; max-width:100vw; border-radius:0; }
+  .video-shell:-webkit-full-screen video { width:auto; height:100vh; max-width:100vw; border-radius:0; }
   .fs-btn {
     position:absolute; bottom:10px; right:10px; border:none; cursor:pointer;
     background:rgba(0,0,0,0.55); color:#fff; border-radius:8px; padding:7px 9px;
     font-size:0.9rem; line-height:1; display:flex; align-items:center; gap:5px;
-    backdrop-filter:blur(2px); transition:background .15s;
+    backdrop-filter:blur(2px); transition:background .15s; z-index:3;
   }
   .fs-btn:hover { background:rgba(0,0,0,0.8); }
+  /* eigene Lautstaerke-Leiste (unten), nur im Vollbild sichtbar */
+  .vol-bar {
+    display:none; position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+    align-items:center; gap:10px; background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
+    padding:10px 16px; border-radius:12px; z-index:4;
+  }
+  .video-shell:fullscreen .vol-bar { display:flex; }
+  .video-shell:-webkit-full-screen .vol-bar { display:flex; }
+  .vol-bar .ic { font-size:1.1rem; line-height:1; color:#fff; }
+  .vol-bar input[type=range] { width:140px; accent-color:var(--accent); cursor:pointer; }
   .join-btn { display:inline-block; border:none; background:var(--accent); color:#1c1410; font-size:1.05rem; font-weight:700; padding:16px 28px; border-radius:12px; cursor:pointer; font-family:inherit; margin:8px 0 4px; transition:transform .1s,filter .15s; }
   .join-btn:hover { filter:brightness(1.08); }
   .join-btn:active { transform:scale(0.98); }
@@ -129,11 +144,15 @@
         </div>
 
         <div class="video-wrap" id="videoWrap">
-          <div class="video-shell">
+          <div class="video-shell" id="videoShell">
             <video id="player" playsinline preload="auto" controlslist="nodownload" oncontextmenu="return false;">
               <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
             </video>
             <button class="fs-btn" id="fsBtn" title="Vollbild">⛶ Vollbild</button>
+            <div class="vol-bar">
+              <span class="ic" id="volIcon">🔊</span>
+              <input type="range" id="volSlider" min="0" max="1" step="0.05" value="1" aria-label="Lautstärke">
+            </div>
           </div>
         </div>
 
@@ -230,6 +249,9 @@
     const liveDot   = document.getElementById("liveDot");
     const liveLabel = document.getElementById("liveLabel");
     const fsBtn     = document.getElementById("fsBtn");
+    const videoShell= document.getElementById("videoShell");
+    const volSlider = document.getElementById("volSlider");
+    const volIcon   = document.getElementById("volIcon");
 
     let joined = false;
     let lastCmdId = null;
@@ -238,11 +260,19 @@
     const JOIN_MSG = "Das Seminar hat das Video bereits gestartet \u2013 bitte einmal auf \u201eDem Seminar beitreten\u201c tippen, dann steigst du an der aktuellen Stelle ein.";
 
     // Vollbild
+    // Vollbild: die SHELL (nicht das Video) -> Browser zeigt keine nativen Video-Controls/Zeitschieber
     fsBtn.addEventListener("click", function () {
-      const el = player;
+      const el = videoShell;
       if (el.requestFullscreen) el.requestFullscreen();
       else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-      else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen(); // iOS Safari
+      else if (player.webkitEnterFullscreen) player.webkitEnterFullscreen(); // iOS-Fallback: nur dort native Controls
+    });
+
+    // Lautstaerke-Regler (im Vollbild sichtbar)
+    volSlider.addEventListener("input", function () {
+      player.volume = parseFloat(volSlider.value);
+      player.muted = (player.volume === 0);
+      volIcon.textContent = player.volume === 0 ? "🔇" : (player.volume < 0.5 ? "🔉" : "🔊");
     });
 
     function currentTargetTime(data) {
