@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heiße Schicht – Vorbereitungspodcast</title>
+<title>Heiße Schicht – Seminar Hitzeschutz</title>
 <style>
   :root {
     --bg-deep: #1c1410;
@@ -14,11 +14,7 @@
     --text-muted: #c7b8ad;
   }
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     min-height: 100vh;
@@ -41,109 +37,278 @@
     border: 1px solid rgba(255, 122, 61, 0.15);
   }
 
-  .eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent-soft);
-    margin-bottom: 10px;
-    font-weight: 600;
-  }
-
-  h1 {
-    font-size: 1.9rem;
-    line-height: 1.2;
-    margin-bottom: 6px;
-    font-weight: 700;
-  }
-
-  .subtitle {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 28px;
-  }
-
-  .meta {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-
-  .meta span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  audio {
-    width: 100%;
-    border-radius: 12px;
-    /* leichte Anpassung der Player-Optik in Chrome/Edge */
-    accent-color: var(--accent);
-  }
-
-  audio::-webkit-media-controls-panel {
-    background-color: #38291f;
-  }
-
-  .hint {
-    margin-top: 24px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding-top: 18px;
-  }
-
-  .disclaimer {
-    margin-top: 16px;
-    font-size: 0.74rem;
-    color: var(--text-muted);
-    opacity: 0.75;
-    line-height: 1.5;
-    font-style: italic;
-  }
-
   .heat-bar {
-    height: 4px;
-    width: 100%;
-    border-radius: 4px;
+    height: 4px; width: 100%; border-radius: 4px;
     background: linear-gradient(90deg, #ffd166, var(--accent), #c1440e);
     margin-bottom: 24px;
   }
+
+  .eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent-soft); margin-bottom: 10px; font-weight: 600;
+  }
+
+  h1 { font-size: 1.9rem; line-height: 1.2; margin-bottom: 6px; font-weight: 700; }
+
+  .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
+
+  /* --- Umschalt-Menü (Tabs) --- */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    background: rgba(0,0,0,0.25);
+    padding: 6px;
+    border-radius: 12px;
+  }
+  .tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--text-main); }
+  .tab.active {
+    background: var(--accent);
+    color: #1c1410;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .meta {
+    display: flex; gap: 16px; margin-bottom: 24px;
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .meta span { display: flex; align-items: center; gap: 6px; }
+
+  audio {
+    width: 100%; border-radius: 12px; accent-color: var(--accent);
+  }
+  audio::-webkit-media-controls-panel { background-color: #38291f; }
+
+  .hint {
+    margin-top: 24px; font-size: 0.82rem; color: var(--text-muted);
+    line-height: 1.5; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px;
+  }
+
+  .disclaimer {
+    margin-top: 16px; font-size: 0.74rem; color: var(--text-muted);
+    opacity: 0.75; line-height: 1.5; font-style: italic;
+  }
+
+  /* --- Video-Panel --- */
+  .live-box {
+    text-align: center;
+    padding: 16px 0 4px;
+  }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 0.8rem; font-weight: 600; color: var(--accent-soft);
+    margin-bottom: 16px;
+  }
+  .live-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #888;
+  }
+  .live-dot.on { background: #ff4d4d; box-shadow: 0 0 0 0 rgba(255,77,77,0.7); animation: pulse 1.6s infinite; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,77,77,0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(255,77,77,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,77,77,0); }
+  }
+
+  video { width: 100%; border-radius: 12px; background: #000; display: block; }
+
+  .join-btn {
+    display: inline-block;
+    border: none;
+    background: var(--accent);
+    color: #1c1410;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 16px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 8px 0 4px;
+    transition: transform 0.1s, filter 0.15s;
+  }
+  .join-btn:hover { filter: brightness(1.08); }
+  .join-btn:active { transform: scale(0.98); }
+
+  .status {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    min-height: 1.2em;
+  }
+  .video-wrap { display: none; }
 </style>
 </head>
 <body>
   <main class="card">
     <div class="heat-bar" aria-hidden="true"></div>
-    <p class="eyebrow">Vorbereitung &middot; Seminar Hitzeschutz am Arbeitsplatz</p>
+    <p class="eyebrow">Seminar &middot; Hitzeschutz am Arbeitsplatz</p>
     <h1>Heiße Schicht</h1>
-    <p class="subtitle">Wenn das Klinikum ins Schwitzen kommt – ein Gespräch zwischen Mira und Jens.</p>
+    <p class="subtitle">Wenn das Klinikum ins Schwitzen kommt.</p>
 
-    <div class="meta">
-      <span>⏱️ ca. 12–13 Min.</span>
-      <span>🎧 Zum Anhören vor dem Seminar</span>
+    <!-- Umschalt-Menü -->
+    <div class="tabs">
+      <button class="tab active" id="tab-podcast" onclick="showPanel('podcast')">🎧 Podcast</button>
+      <button class="tab" id="tab-video" onclick="showPanel('video')">🎬 Live-Video</button>
     </div>
 
-    <audio controls controlsList="nodownload noremoteplayback" oncontextmenu="return false;">
-      <source src="heisse-schicht.mp3" type="audio/mpeg">
-      Dein Browser unterstützt das Audio-Element leider nicht.
-    </audio>
+    <!-- Panel: Podcast -->
+    <section class="panel active" id="panel-podcast">
+      <div class="meta">
+        <span>⏱️ ca. 12–13 Min.</span>
+        <span>🎧 Vorbereitung</span>
+      </div>
 
-    <p class="hint">
-      Hört euch die Episode einmal an (geht z. B. beim Pendeln oder Spazieren) und notiert euch dabei
-      drei Risikofaktoren für Hitzebelastung am Arbeitsplatz Klinikum sowie zwei besonders gefährdete
-      Personengruppen – gern mit Beispielen aus eurem eigenen Famulatur- oder PJ-Alltag.
-      Wir starten im Seminar damit.
-    </p>
+      <audio controls controlsList="nodownload noremoteplayback" oncontextmenu="return false;">
+        <source src="heisse-schicht.mp3" type="audio/mpeg">
+        Dein Browser unterstützt das Audio-Element leider nicht.
+      </audio>
 
-    <p class="disclaimer">
-      Hinweis: Skript und Stimmen dieser Episode wurden mit KI-Unterstützung erstellt. Wir haben die
-      Inhalte sorgfältig geprüft, trotzdem können sich vereinzelt Fehler einschleichen – falls euch
-      etwas komisch vorkommt, sprecht es gerne an.
-    </p>
+      <p class="hint">
+        Hört euch die Episode einmal an (geht z. B. beim Pendeln oder Spazieren) und notiert euch dabei
+        drei Risikofaktoren für Hitzebelastung am Arbeitsplatz Klinikum sowie zwei besonders gefährdete
+        Personengruppen – gern mit Beispielen aus eurem eigenen Famulatur- oder PJ-Alltag.
+        Wir starten im Seminar direkt damit.
+      </p>
+
+      <p class="disclaimer">
+        Hinweis: Skript und Stimmen dieser Episode wurden mit KI-Unterstützung erstellt. Wir haben die
+        Inhalte sorgfältig geprüft, trotzdem können sich vereinzelt Fehler einschleichen – falls euch
+        etwas komisch vorkommt, sprecht es gerne im Seminar an.
+      </p>
+    </section>
+
+    <!-- Panel: Video (Live-Sync) -->
+    <section class="panel" id="panel-video">
+      <div class="live-box">
+        <div class="live-badge"><span class="live-dot" id="liveDot"></span> <span id="liveLabel">Warte auf Verbindung …</span></div>
+
+        <div id="joinArea">
+          <p class="hint" style="border:none; margin:0 0 16px; padding:0;">
+            Das Video wird live vom Seminar gestartet. Tritt einmal bei, damit Bild <strong>und Ton</strong> bei dir freigeschaltet sind.
+          </p>
+          <button class="join-btn" id="joinBtn">▶ Dem Seminar beitreten</button>
+        </div>
+
+        <div class="video-wrap" id="videoWrap">
+          <video id="player" playsinline preload="auto" controlsList="nodownload" oncontextmenu="return false;">
+            <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
+          </video>
+        </div>
+
+        <p class="status" id="status"></p>
+      </div>
+
+      <p class="disclaimer">
+        Hinweis: Das Video ist KI-gestützt erstellt und zeigt ein bewusst zugespitztes Negativ-Szenario.
+      </p>
+    </section>
   </main>
+
+  <!-- Tab-Logik -->
+  <script>
+    function showPanel(which) {
+      document.getElementById('panel-podcast').classList.toggle('active', which === 'podcast');
+      document.getElementById('panel-video').classList.toggle('active', which === 'video');
+      document.getElementById('tab-podcast').classList.toggle('active', which === 'podcast');
+      document.getElementById('tab-video').classList.toggle('active', which === 'video');
+    }
+  </script>
+
+  <!-- Firebase Live-Sync (Zuschauer) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxHBApkfPBq6rtZ9eZYqvYvfMep-VO43o",
+      authDomain: "hitzeschutz-live.firebaseapp.com",
+      databaseURL: "https://hitzeschutz-live-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "hitzeschutz-live",
+      storageBucket: "hitzeschutz-live.firebasestorage.app",
+      messagingSenderId: "692623812224",
+      appId: "1:692623812224:web:2669a8c919599642da6865"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const cmdRef = ref(db, "playback");
+
+    const player    = document.getElementById("player");
+    const joinBtn   = document.getElementById("joinBtn");
+    const joinArea  = document.getElementById("joinArea");
+    const videoWrap = document.getElementById("videoWrap");
+    const statusEl  = document.getElementById("status");
+    const liveDot   = document.getElementById("liveDot");
+    const liveLabel = document.getElementById("liveLabel");
+
+    let joined = false;
+    let lastCmdId = null;
+
+    // Schritt 1: Beitreten -> schaltet Ton frei (Browser-Autoplay-Policy)
+    joinBtn.addEventListener("click", async () => {
+      try {
+        // Kurzes stummes Anspielen entsperrt die Wiedergabe für spätere Befehle
+        player.muted = true;
+        await player.play();
+        player.pause();
+        player.currentTime = 0;
+        player.muted = false;
+        joined = true;
+        joinArea.style.display = "none";
+        videoWrap.style.display = "block";
+        statusEl.textContent = "Bereit – das Video startet automatisch, sobald das Seminar es auslöst.";
+      } catch (e) {
+        statusEl.textContent = "Konnte die Wiedergabe nicht freischalten. Bitte tippe erneut auf den Button.";
+      }
+    });
+
+    // Schritt 2: auf Live-Befehle hören
+    onValue(cmdRef, (snap) => {
+      liveDot.classList.add("on");
+      liveLabel.textContent = "Live verbunden";
+      const data = snap.val();
+      if (!data || !data.cmd) return;
+      if (data.id === lastCmdId) return;   // gleichen Befehl nicht doppelt ausführen
+      lastCmdId = data.id;
+
+      if (!joined) {
+        statusEl.textContent = "Das Seminar hat das Video gestartet – bitte erst auf „Dem Seminar beitreten" tippen.";
+        return;
+      }
+
+      if (data.cmd === "play") {
+        const target = (typeof data.at === "number") ? data.at : 0;
+        try { player.currentTime = target; } catch (e) {}
+        player.play();
+        statusEl.textContent = "▶ Wiedergabe läuft …";
+      } else if (data.cmd === "pause") {
+        player.pause();
+        statusEl.textContent = "⏸ Pausiert.";
+      } else if (data.cmd === "restart") {
+        player.currentTime = 0;
+        player.play();
+        statusEl.textContent = "▶ Von vorne …";
+      }
+    }, (err) => {
+      liveDot.classList.remove("on");
+      liveLabel.textContent = "Keine Verbindung";
+      statusEl.textContent = "Verbindung zum Seminar fehlgeschlagen.";
+    });
+  </script>
 </body>
 </html>
