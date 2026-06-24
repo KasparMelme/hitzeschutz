@@ -4,68 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Heiße Schicht – Seminar Hitzeschutz</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
   :root {
-    --bg-deep: #1c1410; --bg-card: #2a1f18; --accent: #ff7a3d;
-    --accent-soft: #ffb38a; --text-main: #f5ece4; --text-muted: #c7b8ad;
+    --bg-deep:#1c1410; --bg-card:#2a1f18; --accent:#ff7a3d;
+    --accent-soft:#ffb38a; --text-main:#f5ece4; --text-muted:#c7b8ad;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
   body {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle at 30% 20%, #3a2418 0%, var(--bg-deep) 55%);
-    color: var(--text-main); padding: 24px;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(circle at 30% 20%, #3a2418 0%, var(--bg-deep) 55%);
+    color:var(--text-main); padding:24px;
   }
-  .card {
-    max-width: 480px; width: 100%; background: var(--bg-card); border-radius: 20px;
-    padding: 36px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,122,61,0.15);
+  .card { max-width:480px; width:100%; background:var(--bg-card); border-radius:20px; padding:36px 32px; box-shadow:0 20px 60px rgba(0,0,0,0.4); border:1px solid rgba(255,122,61,0.15); }
+  .heat-bar { height:4px; width:100%; border-radius:4px; background:linear-gradient(90deg,#ffd166,var(--accent),#c1440e); margin-bottom:24px; }
+  .eyebrow { font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent-soft); margin-bottom:10px; font-weight:600; }
+  h1 { font-size:1.9rem; line-height:1.2; margin-bottom:6px; font-weight:700; }
+  .subtitle { color:var(--text-muted); font-size:0.95rem; margin-bottom:24px; }
+  .tabs { display:flex; gap:8px; margin-bottom:24px; background:rgba(0,0,0,0.25); padding:6px; border-radius:12px; }
+  .tab { flex:1; border:none; background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; padding:10px 12px; border-radius:8px; cursor:pointer; transition:background .15s,color .15s; font-family:inherit; }
+  .tab:hover { color:var(--text-main); }
+  .tab.active { background:var(--accent); color:#1c1410; }
+  .panel { display:none; }
+  .panel.active { display:block; }
+  .meta { display:flex; gap:16px; margin-bottom:24px; font-size:0.85rem; color:var(--text-muted); }
+  .meta span { display:flex; align-items:center; gap:6px; }
+  audio { width:100%; border-radius:12px; accent-color:var(--accent); }
+  audio::-webkit-media-controls-panel { background-color:#38291f; }
+  .hint { margin-top:24px; font-size:0.82rem; color:var(--text-muted); line-height:1.5; border-top:1px solid rgba(255,255,255,0.06); padding-top:18px; }
+  .disclaimer { margin-top:16px; font-size:0.74rem; color:var(--text-muted); opacity:0.75; line-height:1.5; font-style:italic; }
+  .live-box { text-align:center; padding:16px 0 4px; }
+  .live-badge { display:inline-flex; align-items:center; gap:7px; font-size:0.8rem; font-weight:600; color:var(--accent-soft); margin-bottom:16px; }
+  .live-dot { width:9px; height:9px; border-radius:50%; background:#888; }
+  .live-dot.on { background:#ff4d4d; box-shadow:0 0 0 0 rgba(255,77,77,0.7); animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(255,77,77,0.6)} 70%{box-shadow:0 0 0 8px rgba(255,77,77,0)} 100%{box-shadow:0 0 0 0 rgba(255,77,77,0)} }
+  .video-shell { position:relative; }
+  video { width:100%; border-radius:12px; background:#000; display:block; }
+  .fs-btn {
+    position:absolute; bottom:10px; right:10px; border:none; cursor:pointer;
+    background:rgba(0,0,0,0.55); color:#fff; border-radius:8px; padding:7px 9px;
+    font-size:0.9rem; line-height:1; display:flex; align-items:center; gap:5px;
+    backdrop-filter:blur(2px); transition:background .15s;
   }
-  .heat-bar {
-    height: 4px; width: 100%; border-radius: 4px;
-    background: linear-gradient(90deg, #ffd166, var(--accent), #c1440e); margin-bottom: 24px;
-  }
-  .eyebrow {
-    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--accent-soft); margin-bottom: 10px; font-weight: 600;
-  }
-  h1 { font-size: 1.9rem; line-height: 1.2; margin-bottom: 6px; font-weight: 700; }
-  .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: rgba(0,0,0,0.25); padding: 6px; border-radius: 12px; }
-  .tab {
-    flex: 1; border: none; background: transparent; color: var(--text-muted);
-    font-size: 0.9rem; font-weight: 600; padding: 10px 12px; border-radius: 8px;
-    cursor: pointer; transition: background 0.15s, color 0.15s; font-family: inherit;
-  }
-  .tab:hover { color: var(--text-main); }
-  .tab.active { background: var(--accent); color: #1c1410; }
-  .panel { display: none; }
-  .panel.active { display: block; }
-  .meta { display: flex; gap: 16px; margin-bottom: 24px; font-size: 0.85rem; color: var(--text-muted); }
-  .meta span { display: flex; align-items: center; gap: 6px; }
-  audio { width: 100%; border-radius: 12px; accent-color: var(--accent); }
-  audio::-webkit-media-controls-panel { background-color: #38291f; }
-  .hint { margin-top: 24px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px; }
-  .disclaimer { margin-top: 16px; font-size: 0.74rem; color: var(--text-muted); opacity: 0.75; line-height: 1.5; font-style: italic; }
-  .live-box { text-align: center; padding: 16px 0 4px; }
-  .live-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 0.8rem; font-weight: 600; color: var(--accent-soft); margin-bottom: 16px; }
-  .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #888; }
-  .live-dot.on { background: #ff4d4d; box-shadow: 0 0 0 0 rgba(255,77,77,0.7); animation: pulse 1.6s infinite; }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255,77,77,0.6); }
-    70% { box-shadow: 0 0 0 8px rgba(255,77,77,0); }
-    100% { box-shadow: 0 0 0 0 rgba(255,77,77,0); }
-  }
-  video { width: 100%; border-radius: 12px; background: #000; display: block; }
-  .join-btn {
-    display: inline-block; border: none; background: var(--accent); color: #1c1410;
-    font-size: 1.05rem; font-weight: 700; padding: 16px 28px; border-radius: 12px;
-    cursor: pointer; font-family: inherit; margin: 8px 0 4px; transition: transform 0.1s, filter 0.15s;
-  }
-  .join-btn:hover { filter: brightness(1.08); }
-  .join-btn:active { transform: scale(0.98); }
-  .status { margin-top: 16px; font-size: 0.85rem; color: var(--text-muted); min-height: 1.2em; }
-  .video-wrap { display: none; }
+  .fs-btn:hover { background:rgba(0,0,0,0.8); }
+  .join-btn { display:inline-block; border:none; background:var(--accent); color:#1c1410; font-size:1.05rem; font-weight:700; padding:16px 28px; border-radius:12px; cursor:pointer; font-family:inherit; margin:8px 0 4px; transition:transform .1s,filter .15s; }
+  .join-btn:hover { filter:brightness(1.08); }
+  .join-btn:active { transform:scale(0.98); }
+  .status { margin-top:16px; font-size:0.85rem; color:var(--text-muted); min-height:1.2em; }
+  .video-wrap { display:none; }
+
+  /* --- End-Screen (Stream beendet) --- */
+  .endscreen { display:none; text-align:center; padding:8px 0 4px; }
+  .endscreen h2 { font-size:1.35rem; margin:18px 0 8px; color:var(--text-main); }
+  .endscreen .tag { color:var(--accent-soft); font-weight:700; letter-spacing:0.04em; margin-top:4px; }
+  .drink-svg { width:170px; height:170px; }
+  @keyframes sip { 0%,100%{transform:rotate(0)} 38%{transform:rotate(-30deg)} 62%{transform:rotate(-30deg)} }
+  .arm-group { transform-box:fill-box; transform-origin:right bottom; animation:sip 3.2s ease-in-out infinite; }
+  @keyframes drain { 0%,30%{height:18px;y:62px} 60%,68%{height:6px;y:74px} 92%,100%{height:18px;y:62px} }
+  .water { animation:drain 3.2s ease-in-out infinite; }
+  @keyframes sweat { 0%{opacity:0;transform:translateY(0)} 18%{opacity:.85} 100%{opacity:0;transform:translateY(12px)} }
+  .sweat { animation:sweat 3.2s ease-in-out infinite; transform-box:fill-box; }
+  @keyframes relief { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1.5px)} }
+  .head-group { transform-box:fill-box; transform-origin:center; animation:relief 3.2s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -105,19 +106,49 @@
     <section class="panel" id="panel-video">
       <div class="live-box">
         <div class="live-badge"><span class="live-dot" id="liveDot"></span> <span id="liveLabel">Warte auf Verbindung …</span></div>
+
         <div id="joinArea">
           <p class="hint" style="border:none; margin:0 0 16px; padding:0;">
             Das Video wird live vom Seminar gestartet. Tritt einmal bei, damit Bild <strong>und Ton</strong> bei dir freigeschaltet sind.
           </p>
           <button class="join-btn" id="joinBtn">▶ Dem Seminar beitreten</button>
         </div>
+
         <div class="video-wrap" id="videoWrap">
-          <video id="player" playsinline preload="auto" controlslist="nodownload" oncontextmenu="return false;">
-            <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
-          </video>
+          <div class="video-shell">
+            <video id="player" playsinline preload="auto" controlslist="nodownload" oncontextmenu="return false;">
+              <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
+            </video>
+            <button class="fs-btn" id="fsBtn" title="Vollbild">⛶ Vollbild</button>
+          </div>
         </div>
+
+        <!-- End-Screen -->
+        <div class="endscreen" id="endScreen">
+          <svg class="drink-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="64" cy="130" rx="32" ry="5" fill="rgba(0,0,0,0.25)"/>
+            <path d="M46 130 L46 88 Q46 76 64 76 Q82 76 82 88 L82 130 Z" fill="#ff7a3d"/>
+            <g class="head-group">
+              <circle cx="64" cy="52" r="20" fill="#ffd2b3"/>
+              <path d="M44 50 Q46 30 64 30 Q82 30 84 50 Q76 40 64 40 Q52 40 44 50 Z" fill="#5a3a2a"/>
+              <path d="M56 52 Q59 49 62 52" stroke="#3a2a20" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M58 62 Q64 67 70 62" stroke="#3a2a20" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle class="sweat" cx="86" cy="46" r="3" fill="#7ec8ff"/>
+            </g>
+            <g class="arm-group">
+              <path d="M74 98 Q92 96 100 84" stroke="#ff7a3d" stroke-width="9" fill="none" stroke-linecap="round"/>
+              <path d="M90 60 L106 60 L104 84 L92 84 Z" fill="rgba(180,220,255,0.30)" stroke="#bfe2ff" stroke-width="2"/>
+              <rect class="water" x="92" y="62" width="12" height="18" fill="#4ea8ff" rx="1"/>
+            </g>
+          </svg>
+          <h2>Danke fürs Zuschauen!</h2>
+          <p class="hint" style="border:none; padding:0; margin:0;">Jetzt geht es im Seminar weiter.</p>
+          <p class="tag">#stayhydrated</p>
+        </div>
+
         <p class="status" id="status"></p>
       </div>
+
       <p class="disclaimer">
         Hinweis: Das Video ist KI-gestützt erstellt und zeigt ein bewusst zugespitztes Negativ-Szenario.
       </p>
@@ -128,7 +159,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
-    // --- Tab-Umschaltung ---
     function showPanel(which) {
       document.getElementById("panel-podcast").classList.toggle("active", which === "podcast");
       document.getElementById("panel-video").classList.toggle("active", which === "video");
@@ -139,7 +169,6 @@
       btn.addEventListener("click", function () { showPanel(btn.dataset.target); });
     });
 
-    // --- Firebase ---
     const firebaseConfig = {
       apiKey: "AIzaSyDxHBApkfPBq6rtZ9eZYqvYvfMep-VO43o",
       authDomain: "hitzeschutz-live.firebaseapp.com",
@@ -157,17 +186,26 @@
     const joinBtn   = document.getElementById("joinBtn");
     const joinArea  = document.getElementById("joinArea");
     const videoWrap = document.getElementById("videoWrap");
+    const endScreen = document.getElementById("endScreen");
     const statusEl  = document.getElementById("status");
     const liveDot   = document.getElementById("liveDot");
     const liveLabel = document.getElementById("liveLabel");
+    const fsBtn     = document.getElementById("fsBtn");
 
     let joined = false;
     let lastCmdId = null;
-    let latestData = null;   // letzter empfangener Befehl, fuer spaeten Einstieg
+    let latestData = null;
 
     const JOIN_MSG = "Das Seminar hat das Video bereits gestartet \u2013 bitte einmal auf \u201eDem Seminar beitreten\u201c tippen, dann steigst du an der aktuellen Stelle ein.";
 
-    // Berechnet die aktuelle Soll-Position eines laufenden Videos
+    // Vollbild
+    fsBtn.addEventListener("click", function () {
+      const el = player;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen(); // iOS Safari
+    });
+
     function currentTargetTime(data) {
       if (!data) return 0;
       if (data.cmd === "play" && typeof data.at === "number" && typeof data.serverStart === "number") {
@@ -178,9 +216,24 @@
       return 0;
     }
 
-    // Wendet einen Befehl auf den eigenen Player an
+    function showEndScreen() {
+      videoWrap.style.display = "none";
+      joinArea.style.display = "none";
+      endScreen.style.display = "block";
+      try { player.pause(); } catch (e) {}
+      statusEl.textContent = "";
+    }
+
     function applyCommand(data, isLateJoin) {
       if (!data || !data.cmd) return;
+      if (data.cmd === "end") { showEndScreen(); return; }
+
+      // Falls ein neuer Befehl nach dem End-Screen kommt (z.B. Neustart), Video wieder zeigen
+      if (joined && endScreen.style.display === "block" && data.cmd !== "end") {
+        endScreen.style.display = "none";
+        videoWrap.style.display = "block";
+      }
+
       if (data.cmd === "play") {
         const target = currentTargetTime(data);
         try { player.currentTime = target; } catch (e) {}
@@ -190,14 +243,17 @@
         if (typeof data.at === "number") { try { player.currentTime = data.at; } catch (e) {} }
         player.pause();
         statusEl.textContent = "⏸ Pausiert.";
+      } else if (data.cmd === "stop") {
+        player.pause();
+        try { player.currentTime = 0; } catch (e) {}
+        statusEl.textContent = "⏹ Gestoppt – zurück am Anfang.";
       } else if (data.cmd === "restart") {
-        player.currentTime = 0;
+        try { player.currentTime = 0; } catch (e) {}
         player.play();
         statusEl.textContent = "▶ Von vorne …";
       }
     }
 
-    // Schritt 1: Beitreten -> Ton freischalten, und falls schon laeuft: einsteigen
     joinBtn.addEventListener("click", async function () {
       try {
         player.muted = true;
@@ -207,11 +263,14 @@
         player.muted = false;
         joined = true;
         joinArea.style.display = "none";
-        videoWrap.style.display = "block";
 
-        if (latestData && latestData.cmd === "play") {
-          applyCommand(latestData, true);          // laeuft bereits -> an aktueller Stelle einsteigen
+        if (latestData && latestData.cmd === "end") {
+          showEndScreen();
+        } else if (latestData && (latestData.cmd === "play")) {
+          videoWrap.style.display = "block";
+          applyCommand(latestData, true);
         } else {
+          videoWrap.style.display = "block";
           statusEl.textContent = "Bereit – das Video startet automatisch, sobald das Seminar es auslöst.";
         }
       } catch (e) {
@@ -219,7 +278,6 @@
       }
     });
 
-    // Schritt 2: auf Live-Befehle hoeren
     onValue(cmdRef, function (snap) {
       liveDot.classList.add("on");
       liveLabel.textContent = "Live verbunden";

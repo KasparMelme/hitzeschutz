@@ -4,35 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Steuerung – Heiße Schicht Live</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
   :root { --bg-deep:#1c1410; --bg-card:#2a1f18; --accent:#ff7a3d; --accent-soft:#ffb38a; --text-main:#f5ece4; --text-muted:#c7b8ad; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body {
-    min-height:100vh; display:flex; align-items:center; justify-content:center;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:radial-gradient(circle at 30% 20%, #3a2418 0%, var(--bg-deep) 55%);
-    color:var(--text-main); padding:24px;
-  }
+  body { min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:radial-gradient(circle at 30% 20%, #3a2418 0%, var(--bg-deep) 55%); color:var(--text-main); padding:24px; }
   .card { max-width:460px; width:100%; background:var(--bg-card); border-radius:20px; padding:36px 32px; box-shadow:0 20px 60px rgba(0,0,0,0.4); border:1px solid rgba(255,122,61,0.15); }
   .heat-bar { height:4px; width:100%; border-radius:4px; background:linear-gradient(90deg,#ffd166,var(--accent),#c1440e); margin-bottom:24px; }
   .eyebrow { font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent-soft); margin-bottom:10px; font-weight:600; }
   h1 { font-size:1.6rem; margin-bottom:20px; }
   label { display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; }
   input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.25); color:var(--text-main); font-size:1rem; font-family:inherit; margin-bottom:16px; }
-  button { border:none; border-radius:12px; font-family:inherit; font-weight:700; cursor:pointer; transition:filter 0.15s, transform 0.1s; }
+  button { border:none; border-radius:12px; font-family:inherit; font-weight:700; cursor:pointer; transition:filter .15s, transform .1s; }
   button:active { transform:scale(0.98); }
   .unlock-btn { width:100%; background:var(--accent); color:#1c1410; font-size:1rem; padding:14px; }
   .controls { display:none; }
-  .btn-row { display:flex; gap:10px; margin-bottom:12px; }
-  .play { flex:2; background:#3ecf6a; color:#06210f; font-size:1.15rem; padding:18px; }
-  .pause { flex:1; background:#4a3a2f; color:var(--text-main); font-size:1rem; padding:18px; }
-  .restart { width:100%; background:#4a3a2f; color:var(--text-main); font-size:0.92rem; padding:12px; margin-bottom:16px; }
-  .live-badge { display:inline-flex; align-items:center; gap:7px; font-size:0.8rem; font-weight:600; color:var(--accent-soft); margin-bottom:18px; }
+  .preview-wrap { position:relative; margin-bottom:18px; border-radius:12px; overflow:hidden; background:#000; }
+  .preview-wrap video { width:100%; display:block; }
+  .preview-tag { position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.55); color:#fff; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:6px; letter-spacing:0.05em; }
+  .btn-row { display:flex; gap:10px; margin-bottom:10px; }
+  .play { flex:2; background:#3ecf6a; color:#06210f; font-size:1.1rem; padding:16px; }
+  .pause { flex:1; background:#e0a23c; color:#241803; font-size:0.95rem; padding:16px; }
+  .stop  { width:100%; background:#d23b3b; color:#fff; font-size:0.95rem; padding:14px; margin-bottom:10px; }
+  .end   { width:100%; background:#4a3a2f; color:var(--accent-soft); font-size:0.9rem; padding:13px; margin-bottom:8px; border:1px solid rgba(255,122,61,0.25); }
+  .live-badge { display:inline-flex; align-items:center; gap:7px; font-size:0.8rem; font-weight:600; color:var(--accent-soft); margin-bottom:16px; }
   .live-dot { width:9px; height:9px; border-radius:50%; background:#888; }
   .live-dot.on { background:#3ecf6a; }
-  .status { margin-top:14px; font-size:0.85rem; color:var(--text-muted); min-height:1.2em; }
+  .status { margin-top:12px; font-size:0.85rem; color:var(--text-muted); min-height:1.2em; }
   .err { color:#ff8a8a; font-size:0.85rem; margin-top:8px; min-height:1em; }
-  .hintbox { margin-top:20px; font-size:0.78rem; color:var(--text-muted); line-height:1.5; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; }
+  .hintbox { margin-top:18px; font-size:0.78rem; color:var(--text-muted); line-height:1.5; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; }
+  /* Bestaetigungs-Overlay */
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:24px; z-index:10; }
+  .overlay.show { display:flex; }
+  .dialog { background:var(--bg-card); border:1px solid rgba(255,122,61,0.25); border-radius:16px; padding:26px 24px; max-width:340px; text-align:center; }
+  .dialog p { font-size:0.95rem; line-height:1.5; margin-bottom:20px; }
+  .dialog .row { display:flex; gap:10px; }
+  .dialog .yes { flex:1; background:#d23b3b; color:#fff; padding:13px; }
+  .dialog .no { flex:1; background:#4a3a2f; color:var(--text-main); padding:13px; }
 </style>
 </head>
 <body>
@@ -50,20 +58,42 @@
 
     <div class="controls" id="controls">
       <div class="live-badge"><span class="live-dot" id="liveDot"></span> <span id="liveLabel">Verbinde …</span></div>
+
+      <!-- Vorschau dessen, was die Zuschauer sehen -->
+      <div class="preview-wrap">
+        <span class="preview-tag">VORSCHAU</span>
+        <video id="preview" muted playsinline preload="auto">
+          <source src="https://media.ennorath.org/uni/hitzeschutz/hitzeschutz_am_arbeitsplatz.mp4" type="video/mp4">
+        </video>
+      </div>
+
       <div class="btn-row">
         <button class="play" id="playBtn">▶ Video starten</button>
         <button class="pause" id="pauseBtn">⏸ Pause</button>
       </div>
-      <button class="restart" id="restartBtn">↺ Von vorne starten</button>
+      <button class="stop" id="stopBtn">⏹ Video stoppen (zurück an Anfang)</button>
+      <button class="end" id="endBtn">✦ Stream beenden</button>
       <p class="status" id="status">Bereit.</p>
+
       <div class="hintbox">
-        <strong>Ablauf im Seminar:</strong> Diese Seite vorab öffnen und entsperren. Bitte die Teilnehmenden,
-        im Reiter „Live-Video" einmal auf „Dem Seminar beitreten" zu tippen. Dann hier auf „Video starten" –
-        das Video läuft synchron bei allen mit Ton. Wer später beitritt, steigt automatisch an der
-        aktuellen Stelle ein. „Von vorne" setzt alle zurück an den Anfang.
+        <strong>Ablauf:</strong> Vorab entsperren. Teilnehmende bitten, im Reiter „Live-Video" einmal auf „Dem Seminar beitreten" zu tippen.
+        <br><strong>Starten</strong> spielt synchron bei allen ab (Spät-Einsteiger landen an der aktuellen Stelle).
+        <strong>Pause</strong> hält an und wird zu „Fortsetzen". <strong>Stoppen</strong> setzt zurück an den Anfang.
+        <strong>Stream beenden</strong> zeigt bei allen den Abschluss-Screen.
       </div>
     </div>
   </main>
+
+  <!-- Rueckfrage fuer "Stream beenden" -->
+  <div class="overlay" id="overlay">
+    <div class="dialog">
+      <p>Stream wirklich beenden? Bei allen Zuschauern wird das Video ausgeblendet und der Abschluss-Screen gezeigt.</p>
+      <div class="row">
+        <button class="no" id="cancelEnd">Abbrechen</button>
+        <button class="yes" id="confirmEnd">Beenden</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
@@ -91,6 +121,15 @@
     const statusEl = document.getElementById("status");
     const liveDot = document.getElementById("liveDot");
     const liveLabel = document.getElementById("liveLabel");
+    const preview = document.getElementById("preview");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const endBtn = document.getElementById("endBtn");
+    const overlay = document.getElementById("overlay");
+
+    let isPaused = false;     // Zustand fuer Pause/Fortsetzen-Toggle
+    let pausedAt = 0;
 
     function unlock() {
       if (pw.value === WRITE_KEY) {
@@ -110,24 +149,83 @@
     document.getElementById("unlockBtn").addEventListener("click", unlock);
     pw.addEventListener("keydown", function (e) { if (e.key === "Enter") unlock(); });
 
-    async function send(cmd, at) {
-      const payload = { cmd: cmd, key: WRITE_KEY, id: Date.now() };
-      if (typeof at === "number") payload.at = at; else payload.at = 0;
-      // serverStart = Wandzeit beim Start; ermoeglicht Spaet-Einsteigern die richtige Position
-      payload.serverStart = Date.now();
+    async function send(payloadExtra) {
+      const payload = Object.assign({ key: WRITE_KEY, id: Date.now() }, payloadExtra);
       try {
         await set(cmdRef, payload);
-        if (cmd === "play")    statusEl.textContent = "▶ Startbefehl gesendet.";
-        if (cmd === "pause")   statusEl.textContent = "⏸ Pause gesendet.";
-        if (cmd === "restart") statusEl.textContent = "↺ Neustart gesendet.";
+        return true;
       } catch (e) {
         statusEl.textContent = "Fehler beim Senden: " + (e && e.message ? e.message : e);
+        return false;
       }
     }
 
-    document.getElementById("playBtn").addEventListener("click", function () { send("play", 0); });
-    document.getElementById("pauseBtn").addEventListener("click", function () { send("pause"); });
-    document.getElementById("restartBtn").addEventListener("click", function () { send("restart", 0); });
+    function setPauseButtonToPause() {
+      isPaused = false;
+      pauseBtn.textContent = "⏸ Pause";
+      pauseBtn.style.background = "#e0a23c";
+    }
+    function setPauseButtonToResume() {
+      isPaused = true;
+      pauseBtn.textContent = "▶ Fortsetzen";
+      pauseBtn.style.background = "#3ecf6a";
+    }
+
+    // ▶ Starten (von Anfang)
+    playBtn.addEventListener("click", async function () {
+      const ok = await send({ cmd: "play", at: 0, serverStart: Date.now() });
+      if (ok) {
+        statusEl.textContent = "▶ Startbefehl gesendet.";
+        try { preview.currentTime = 0; preview.play(); } catch (e) {}
+        setPauseButtonToPause();
+      }
+    });
+
+    // ⏸ Pause  /  ▶ Fortsetzen (Toggle)
+    pauseBtn.addEventListener("click", async function () {
+      if (!isPaused) {
+        // pausieren an aktueller Stelle
+        const at = preview.currentTime || 0;
+        pausedAt = at;
+        const ok = await send({ cmd: "pause", at: at });
+        if (ok) {
+          statusEl.textContent = "⏸ Pausiert bei " + at.toFixed(1) + " s.";
+          try { preview.pause(); } catch (e) {}
+          setPauseButtonToResume();
+        }
+      } else {
+        // an derselben Stelle fortsetzen
+        const ok = await send({ cmd: "play", at: pausedAt, serverStart: Date.now() });
+        if (ok) {
+          statusEl.textContent = "▶ Fortgesetzt bei " + pausedAt.toFixed(1) + " s.";
+          try { preview.currentTime = pausedAt; preview.play(); } catch (e) {}
+          setPauseButtonToPause();
+        }
+      }
+    });
+
+    // ⏹ Stoppen (zurueck auf 0)
+    stopBtn.addEventListener("click", async function () {
+      const ok = await send({ cmd: "stop", at: 0 });
+      if (ok) {
+        statusEl.textContent = "⏹ Gestoppt – alle zurück am Anfang.";
+        try { preview.pause(); preview.currentTime = 0; } catch (e) {}
+        setPauseButtonToPause();
+      }
+    });
+
+    // ✦ Stream beenden -> Rueckfrage
+    endBtn.addEventListener("click", function () { overlay.classList.add("show"); });
+    document.getElementById("cancelEnd").addEventListener("click", function () { overlay.classList.remove("show"); });
+    document.getElementById("confirmEnd").addEventListener("click", async function () {
+      overlay.classList.remove("show");
+      const ok = await send({ cmd: "end" });
+      if (ok) {
+        statusEl.textContent = "✦ Stream beendet – Abschluss-Screen wird gezeigt.";
+        try { preview.pause(); } catch (e) {}
+        setPauseButtonToPause();
+      }
+    });
   </script>
 </body>
 </html>
